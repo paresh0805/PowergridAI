@@ -1,13 +1,37 @@
 import React, { useState, useEffect } from "react";
 
-// Top 3 summary cards
+// Enhanced Top Cards with more details
 const topCards = [
-  { title: "Overall Risk Score", value: "6.8", label: "Medium Risk" },
-  { title: "High Risk Projects", value: "23", label: "Require immediate attention" },
-  { title: "Risk Trend", value: "+12%", label: "vs last quarter" },
+  { 
+    title: "Overall Risk Score", 
+    value: 6.8, 
+    label: "Medium Risk", 
+    change: "+1.2", 
+    trend: "up", 
+    description: "Risk score compared to last quarter", 
+    progress: 68 // percentage for a small progress bar
+  },
+  { 
+    title: "High Risk Projects", 
+    value: 23, 
+    label: "Require immediate attention", 
+    change: "-3", 
+    trend: "down", 
+    description: "Change in high-risk projects since last month", 
+    progress: 23 
+  },
+  { 
+    title: "Risk Trend", 
+    value: "+12%", 
+    label: "vs last quarter", 
+    change: "+2%", 
+    trend: "up", 
+    description: "Overall risk trend across projects", 
+    progress: 12 
+  },
 ];
 
-// Bottom section data for India-focused projects
+// Bottom section data
 const bottomData = {
   "Risk Factors": [
     {
@@ -137,8 +161,13 @@ export default function RiskAnalysis() {
     Low: "bg-green-500",
   };
 
+  const trendColors = {
+    up: "text-green-500",
+    down: "text-red-500",
+  };
+
   useEffect(() => {
-    // Animate progress bars
+    // Animate progress bars for bottom section
     const newValues = {};
     bottomData[activeTab].forEach((card) => {
       card.risks.forEach((risk) => {
@@ -178,8 +207,20 @@ export default function RiskAnalysis() {
             className="bg-white shadow-lg rounded-xl p-5 hover:shadow-2xl transition-shadow duration-300"
           >
             <h3 className="text-gray-500 text-sm">{card.title}</h3>
-            <p className="text-2xl font-bold">{card.value}</p>
+            <div className="flex items-center justify-between mt-1 mb-2">
+              <p className="text-2xl font-bold">{card.value}</p>
+              <span className={`flex items-center ${trendColors[card.trend]} text-sm font-semibold`}>
+                {card.trend === "up" ? "▲" : "▼"} {card.change}
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 h-2 rounded-full mb-2 overflow-hidden">
+              <div
+                className={`bg-blue-500 h-2 rounded-full`}
+                style={{ width: `${card.progress}%` }}
+              ></div>
+            </div>
             <span className="text-gray-400 text-sm">{card.label}</span>
+            <p className="text-gray-400 text-xs mt-1">{card.description}</p>
           </div>
         ))}
       </div>
